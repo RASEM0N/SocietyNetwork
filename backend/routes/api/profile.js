@@ -239,8 +239,8 @@ router.put(
     [
         auth,
         body('title', 'Title is required').not().isEmpty(),
-        body('company', 'Title is company').not().isEmpty(),
-        body('from', 'Title is from').not().isEmpty(),
+        body('company', 'Company is required').not().isEmpty(),
+        body('from', 'From is required').not().isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -252,29 +252,11 @@ router.put(
             });
         }
 
-        const {
-            title,
-            company,
-            location,
-            from,
-            to,
-            current,
-            description,
-        } = req.body;
-
-        const newExp = {
-            title,
-            company,
-            location,
-            from,
-            to,
-            current,
-            description,
-        };
-
         try {
             const profile = await Profile.findOne({ user: req.user.id });
-            profile.experience.unshift(newExp);
+
+            /* unshift типа push для массивов, ибо experience массив*/
+            profile.experience.unshift(req.body);
 
             await profile.save();
             return res.status(200).json({
@@ -290,5 +272,112 @@ router.put(
         }
     }
 );
+// @route    DELETE api/profile/experience/:exp_id
+// @desc     Delete experience from profile
+// @access   Private
+router.delete('/experience/:exp_id', auth, async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+        // Get remove index
+        /* т.к. experience массив и мы удаляем по id
+         * тута мы находим индекс expience-а для удаления*/
+        const removeIndex = profile.experience
+            .map((item) => item.id)
+            .indexOf(req.params.exp_id);
+
+        /* тута иммутабильно удаляем experience по индексу*/
+        profile.experience.splice(removeIndex, 1);
+        await profile.save();
+        return res.status(200).json({
+            success: true,
+            data: {},
+        });
+    } catch (err) {
+        console.error(err);
+        if (err.kind === `ObjectId`) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Experience not found',
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            msg: 'Server error',
+        });
+    }
+});
+
+// @route    PUT api/profile/education
+// @desc     Add profile education
+// @access   Private
+router.put(
+    '/education',
+    [
+        auth,
+        body('school', 'School is required').not().isEmpty(),
+        body('degree', 'Degree is required').not().isEmpty(),
+        body('fieldofstudy', 'Field of study is required').not().isEmpty(),
+        body('from', 'From is required').not().isEmpty(),
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                succcess: false,
+                errors: errors.array(),
+            });
+        }
+
+        try {
+            const profile = await Profile.findOne({ user: req.user.id });
+            profile.education.unshift(req.body);
+            await profile.save();
+            return res.status(200).json({
+                success: true,
+                data: profile,
+            });
+        } catch (e) {
+            console.error(e.message);
+            return res.status(500).json({
+                success: false,
+                msg: 'Server error',
+            });
+        }
+    }
+);
+
+// @route    DELETE api/profile/education/:edu_id
+// @desc     Delete education from profile
+// @access   Private
+router.delete('/education/:edu_id', auth, async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        // Get remove index
+        const removeIndex = profile.education
+            .map((item) => item.id)
+            .indexOf(req.params.edu_id);
+
+        profile.education.splice(removeIndex, 1);
+        await profile.save();
+        return res.status(200).json({
+            success: true,
+            data: {},
+        });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === `ObjectId`) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Experience not found',
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            msg: 'Server error',
+        });
+    }
+});
 
 module.exports = router;
