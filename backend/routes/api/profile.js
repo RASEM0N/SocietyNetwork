@@ -38,7 +38,7 @@ router.get('/me', auth, async (req, res) => {
     }
 });
 
-// @route           GET api/profile/
+// @route           POST api/profile
 // @description     Create or update current user profile
 // @access          Private
 router.post(
@@ -133,5 +133,77 @@ router.post(
         }
     }
 );
+
+// @route           GET api/profile/
+// @description     Get all profile
+// @access          Public
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate({
+            path: 'user',
+            select: 'name avatar',
+        });
+
+        if (profiles === null) {
+            return res.status(200).json({
+                success: true,
+                msg: 'No profiles available',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            count: profiles.length,
+            data: profiles,
+        });
+    } catch (e) {
+        console.error(e.message);
+        return res.status(500).json({
+            success: true,
+            msg: 'Server erro',
+        });
+    }
+});
+
+// @route           GET api/profile/:user_Id
+// @description     Get profile by user ID
+// @access          Public
+router.get('/user/:user_id', async (req, res) => {
+    try {
+        const profile = await Profile.findOne({
+            user: req.params.user_id,
+        }).populate({
+            path: 'user',
+            select: 'name avatar',
+        });
+
+        console.log(profile);
+
+        if (!profile) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Profile not found',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: profile,
+        });
+    } catch (e) {
+        console.error(e);
+
+        if (e.kind === `ObjectId`) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Profile not found',
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            msg: 'Server error',
+        });
+    }
+});
 
 module.exports = router;

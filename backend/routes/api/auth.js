@@ -7,8 +7,8 @@ const User = require('../../models/User');
 const { body, validationResult } = require('express-validator');
 
 // @route           GET api/auth
-// @description     Test Route
-// @access          Public
+// @description     Get me user
+// @access          Private
 router.route('/me').get(auth, async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
