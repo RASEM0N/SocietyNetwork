@@ -146,4 +146,100 @@ router.delete('/:post_id', auth, async (req, res) => {
     }
 });
 
+// @route           PUT api/posts/like/:post_id
+// @description     Like a post
+// @access          Private
+router.put('/like/:post_id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+
+        if (!post) {
+            return res.status(401).json({
+                success: false,
+                msg: 'Post not found',
+            });
+        }
+        // Check if the post has already been liked
+        if (post.likes.some((like) => like.user.toString() === req.user.id)) {
+            return res.status(400).json({
+                success: false,
+                msg: `Post already liked`,
+            });
+        }
+
+        post.likes.unshift({
+            user: req.user.id,
+        });
+
+        await post.save();
+
+        await res.status(200).json({
+            success: true,
+            data: post,
+        });
+    } catch (e) {
+        console.log(e.message);
+
+        if (e.kind === 'ObjectId') {
+            return res.status(404).json({
+                success: false,
+                msg: 'Post not found',
+            });
+        }
+
+        await res.status(500).json({
+            success: false,
+            msg: `Server error`,
+        });
+    }
+});
+
+// @route           PUT api/posts/unlike/:post_id
+// @description     Unlike a post
+// @access          Private
+router.put('/unlike/:post_id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+
+        if (!post) {
+            return res.status(401).json({
+                success: false,
+                msg: 'Post not found',
+            });
+        }
+        // Check if the post has already been liked
+        if (!post.likes.some((like) => like.user.toString() === req.user.id)) {
+            return res.status(400).json({
+                success: false,
+                msg: `Post has not yet been liked`,
+            });
+        }
+
+        post.likes = post.likes.filter(({ user }) => {
+            return user.toString() !== req.user.id;
+        });
+
+        await post.save();
+
+        await res.status(200).json({
+            success: true,
+            data: post,
+        });
+    } catch (e) {
+        console.log(e.message);
+
+        if (e.kind === 'ObjectId') {
+            return res.status(404).json({
+                success: false,
+                msg: 'Post not found',
+            });
+        }
+
+        await res.status(500).json({
+            success: false,
+            msg: `Server error`,
+        });
+    }
+});
+
 module.exports = router;
