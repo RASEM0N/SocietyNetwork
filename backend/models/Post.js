@@ -34,6 +34,9 @@ const PostSchema = new Schema({
                 type: String,
                 required: true,
             },
+            name: {
+                type: String,
+            },
             avatar: {
                 type: String,
             },
@@ -43,6 +46,10 @@ const PostSchema = new Schema({
             },
         },
     ],
+    date: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 module.exports = mongoose.model('post', PostSchema);
