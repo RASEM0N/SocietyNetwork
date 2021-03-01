@@ -3,6 +3,7 @@ const express = require('express');
 const colors = require('colors');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 // Middleware
 const morgan = require('morgan');
@@ -23,6 +24,8 @@ connectDB();
 app.use(express.json({ extended: false }));
 
 // Dev logging middleware
+app.use(cors());
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
