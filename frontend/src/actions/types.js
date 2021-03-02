@@ -9,3 +9,5 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 
 export const LOGGIN_SUCCESS = 'LOGGIN_SUCCESS';
 export const LOGGIN_FAIL = 'LOGGIN_FAIL';
+
+export const LOGOUT = 'LOGOUT';

@@ -4,6 +4,7 @@ import {
     AUTH_ERROR,
     LOGGIN_FAIL,
     LOGGIN_SUCCESS,
+    LOGOUT,
     REGISTER_FAIL,
     REGISTER_SUCCESS,
     USER_LOADED,
@@ -102,4 +103,11 @@ export const login = ({ email, password }) => async (dispatch) => {
             type: LOGGIN_FAIL,
         });
     }
+};
+
+// Logout/ Clear
+export const logout = () => (dispatch) => {
+    dispatch({
+        type: LOGOUT,
+    });
 };
