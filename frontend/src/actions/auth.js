@@ -1,7 +1,15 @@
 import axios from 'axios';
 import { URL } from '../config/config';
-import { REGISTER_FAIL, REGISTER_SUCCESS } from './types';
+import {
+    AUTH_ERROR,
+    LOGGIN_FAIL,
+    LOGGIN_SUCCESS,
+    REGISTER_FAIL,
+    REGISTER_SUCCESS,
+    USER_LOADED,
+} from './types';
 import { setAlert } from './alert';
+import setAuthToken from '../utils/setAuthToken';
 
 // Register user
 export const register = ({ name, email, password }) => async (dispatch) => {
@@ -24,10 +32,74 @@ export const register = ({ name, email, password }) => async (dispatch) => {
             type: REGISTER_SUCCESS,
             payload: response.data,
         });
+        dispatch(loadUser());
     } catch (e) {
-        setAlert(e.message);
+        const errors = e.response.data.errors;
+        errors.forEach((error) => {
+            setAlert(error);
+        });
         dispatch({
             type: REGISTER_FAIL,
+        });
+    }
+};
+
+// Load user
+export const loadUser = () => async (dispatch) => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    try {
+        // const config = {
+        //     headers: {
+        //         'x-auth-token': localStorage.token,
+        //     },
+        // };
+
+        const responce = await axios.get(`${URL}/api/auth/me`);
+
+        dispatch({
+            type: USER_LOADED,
+            payload: responce.data,
+        });
+    } catch (e) {
+        console.error(e.message);
+        dispatch({
+            type: AUTH_ERROR,
+        });
+    }
+};
+
+// Login user
+export const login = ({ email, password }) => async (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const body = JSON.stringify({
+        email,
+        password,
+    });
+
+    try {
+        const response = await axios.post(`${URL}/api/auth`, body, config);
+
+        dispatch({
+            type: LOGGIN_SUCCESS,
+            payload: response.data,
+        });
+
+        dispatch(loadUser());
+    } catch (e) {
+        console.log(e);
+        const errors = e.response.data.errors;
+        errors.forEach((error) => {
+            setAlert(error);
+        });
+        dispatch({
+            type: LOGGIN_FAIL,
         });
     }
 };

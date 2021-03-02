@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import './app.css';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
@@ -7,8 +7,19 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './components/auth/login';
 import Register from './components/auth/register';
 import Alert from './components/layout/Alert';
+import setAuthToken from './utils/setAuthToken';
+import store from './store';
+import { loadUser } from './actions/auth';
+
+if (localStorage.token) {
+    setAuthToken(localStorage.token);
+}
 
 function App() {
+    useEffect(() => {
+        store.dispatch(loadUser());
+    }, []);
+
     return (
         <BrowserRouter>
             <Fragment>
