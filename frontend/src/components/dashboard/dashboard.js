@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Spinner } from '../common/Spinner';
 import { Link } from 'react-router-dom';
+import DashboardActions from './DashboardActions';
 
 const Dashboard = ({
     auth: { user },
@@ -25,7 +26,9 @@ const Dashboard = ({
             {/*Есть аккаунт, но нет профиля для отображения
             Вместо этого перекинет на */}
             {profile !== null ? (
-                <Fragment>есть профиль</Fragment>
+                <Fragment>
+                    <DashboardActions />
+                </Fragment>
             ) : (
                 <Fragment>
                     <p>Нет профиля</p>

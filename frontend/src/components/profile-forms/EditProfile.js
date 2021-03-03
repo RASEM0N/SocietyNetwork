@@ -1,8 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
-import { createProfile } from '../../actions/profile';
-import { setAlert } from '../../actions/alert';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
 const initialState = {
     company: '',
@@ -19,18 +18,39 @@ const initialState = {
     instagram: '',
 };
 
-const CreateProfile = ({
+const EditProfile = ({
     createProfile,
     history,
+    getCurrentProfile,
     profile: { profile, loading },
 }) => {
     const [formData, setFormData] = useState(initialState);
 
-    console.log(profile);
-
     const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
-    if (loading || profile) return <Redirect to={'/dashboard'} />;
+    useEffect(() => {
+        getCurrentProfile();
+
+        /* 1 раз само самой обновит и когда loading подрузиться,то обновит */
+        setFormData({
+            company: loading || !profile.company ? '' : profile.company,
+            website: loading || !profile.website ? '' : profile.website,
+            location: loading || !profile.location ? '' : profile.location,
+            status: loading || !profile.status ? '' : profile.status,
+            skills: loading || !profile.skills ? '' : profile.skills.join(','),
+            githubusername:
+                loading || !profile.githubusername
+                    ? ''
+                    : profile.githubusername,
+            bio: loading || !profile.bio ? '' : profile.bio,
+            twitter: loading || !profile.social ? '' : profile.social.twitter,
+            facebook: loading || !profile.social ? '' : profile.social.facebook,
+            linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+            youtube: loading || !profile.social ? '' : profile.social.youtube,
+            instagram:
+                loading || !profile.social ? '' : profile.social.instagram,
+        });
+    }, [loading]);
 
     const {
         company,
@@ -54,12 +74,12 @@ const CreateProfile = ({
 
     const onSubmit = (event) => {
         event.preventDefault();
-        createProfile(formData, history);
+        createProfile(formData, history, true);
     };
 
     return (
         <Fragment>
-            <h1 className="large text-primary">Create Your Profile</h1>
+            <h1 className="large text-primary">Edit Your Profile</h1>
             <p className="lead">
                 <i className="fas fa-user"></i> Let's get some information to
                 make your profile stand out
@@ -252,4 +272,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
     createProfile,
-})(withRouter(CreateProfile));
+    getCurrentProfile,
+})(withRouter(EditProfile));

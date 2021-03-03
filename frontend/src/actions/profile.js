@@ -11,7 +11,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 
         dispatch({
             type: GET_PROFILE,
-            payload: responce.data,
+            payload: responce.data.data,
         });
     } catch (e) {
         console.log(e.message);
@@ -41,11 +41,11 @@ export const createProfile = (formData, history, edit = false) => async (
             payload: response.data.data,
         });
 
-        dispatch(setAlert(edit ? 'Profile Update' : 'Profile created'));
+        dispatch(
+            setAlert(edit ? 'Profile Update' : 'Profile created', 'success')
+        );
 
-        if (!edit) {
-            history.push('/dashboard');
-        }
+        history.push('/dashboard');
     } catch (error) {
         const errors = error.response.data.errors;
         errors.forEach((error) => {
