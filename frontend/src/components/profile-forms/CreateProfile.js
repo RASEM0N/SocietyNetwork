@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
+import { createProfile } from '../../actions/profile';
+import { setAlert } from '../../actions/alert';
 
 const initialState = {
     company: '',
@@ -17,10 +19,12 @@ const initialState = {
     instagram: '',
 };
 
-const CreateProfile = (props) => {
+const CreateProfile = ({ createProfile, history, profile }) => {
     const [formData, setFormData] = useState(initialState);
 
     const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+    if (profile !== null) return <Redirect to={'/dashboard'} />;
 
     const {
         company,
@@ -42,6 +46,11 @@ const CreateProfile = (props) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
+    const onSubmit = (event) => {
+        event.preventDefault();
+        createProfile(formData, history);
+    };
+
     return (
         <Fragment>
             <h1 className="large text-primary">Create Your Profile</h1>
@@ -50,7 +59,7 @@ const CreateProfile = (props) => {
                 make your profile stand out
             </p>
             <small>* = required field</small>
-            <form className="form">
+            <form className="form" onSubmit={(e) => onSubmit(e)}>
                 <div className="form-group">
                     <select
                         name="status"
@@ -230,4 +239,11 @@ const CreateProfile = (props) => {
     );
 };
 
-export default connect()(CreateProfile);
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    profile: state.profile,
+});
+
+export default connect(null, {
+    createProfile,
+})(withRouter(CreateProfile));

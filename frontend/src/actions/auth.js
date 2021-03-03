@@ -30,6 +30,8 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     try {
         const response = await axios.post(`${URL}/api/users`, body, config);
 
+        console.log(response.data);
+
         dispatch({
             type: REGISTER_SUCCESS,
             payload: response.data,
@@ -38,7 +40,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     } catch (e) {
         const errors = e.response.data.errors;
         errors.forEach((error) => {
-            setAlert(error);
+            dispatch(setAlert(error.msg));
         });
         dispatch({
             type: REGISTER_FAIL,
@@ -65,7 +67,6 @@ export const loadUser = () => async (dispatch) => {
             payload: responce.data,
         });
     } catch (e) {
-        console.error(e.message);
         dispatch({
             type: AUTH_ERROR,
         });
@@ -95,10 +96,9 @@ export const login = ({ email, password }) => async (dispatch) => {
 
         dispatch(loadUser());
     } catch (e) {
-        console.log(e);
         const errors = e.response.data.errors;
         errors.forEach((error) => {
-            setAlert(error);
+            dispatch(setAlert(error.msg));
         });
         dispatch({
             type: LOGGIN_FAIL,
