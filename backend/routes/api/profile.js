@@ -54,7 +54,7 @@ router.post(
 
         if (!error.isEmpty()) {
             return res.status(400).json({
-                errors: errors.apply(),
+                errors: error.array(),
             });
         }
 
