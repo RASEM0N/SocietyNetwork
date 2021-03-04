@@ -291,7 +291,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         await profile.save();
         return res.status(200).json({
             success: true,
-            data: {},
+            data: profile,
         });
     } catch (err) {
         console.error(err);
@@ -364,7 +364,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
         await profile.save();
         return res.status(200).json({
             success: true,
-            data: {},
+            data: profile,
         });
     } catch (err) {
         console.error(err.message);
