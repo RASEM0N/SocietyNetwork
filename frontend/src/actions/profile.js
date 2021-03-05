@@ -6,6 +6,8 @@ import {
     ACCOUNT_DELETED,
     CLEAR_PROFILE,
     GET_PROFILE,
+    GET_PROFILES,
+    GET_REPOS,
     PROFILE_ERROR,
     UPDATE_PROFILE,
 } from './types';
@@ -17,6 +19,74 @@ export const getCurrentProfile = () => async (dispatch) => {
 
         dispatch({
             type: GET_PROFILE,
+            payload: responce.data.data,
+        });
+    } catch (e) {
+        console.log(e.message);
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: {
+                msg: e.response.statusText,
+                status: e.response.status,
+            },
+        });
+    }
+};
+
+// Get all profiles
+export const getAllProfile = () => async (dispatch) => {
+    dispatch({
+        type: CLEAR_PROFILE,
+    });
+    try {
+        const responce = await axios.get(`${URL}/api/profile`);
+
+        dispatch({
+            type: GET_PROFILES,
+            payload: responce.data.data,
+        });
+    } catch (e) {
+        console.log(e.message);
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: {
+                msg: e.response.statusText,
+                status: e.response.status,
+            },
+        });
+    }
+};
+
+// Get profile by ID
+export const getProfileById = (userId) => async (dispatch) => {
+    try {
+        const responce = await axios.get(`${URL}/api/profile/user/${userId}`);
+
+        dispatch({
+            type: GET_PROFILE,
+            payload: responce.data.data,
+        });
+    } catch (e) {
+        console.log(e.message);
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: {
+                msg: e.response.statusText,
+                status: e.response.status,
+            },
+        });
+    }
+};
+
+// Get GitHub repos
+export const getGitHubRepos = (username) => async (dispatch) => {
+    try {
+        const responce = await axios.get(
+            `${URL}/api/profile/github/${username}`
+        );
+
+        dispatch({
+            type: GET_REPOS,
             payload: responce.data.data,
         });
     } catch (e) {
