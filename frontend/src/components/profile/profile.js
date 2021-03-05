@@ -3,8 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getProfileById } from '../../actions/profile';
 import { Spinner } from '../common/Spinner';
-import ProfileTop from './ProfileTop';
-import ProfileAbout from './ProfileAbout';
 
 const Profile = ({
     profile: { profile, loading },
@@ -24,9 +22,12 @@ const Profile = ({
                 'Такого профиля нету'
             ) : (
                 <>
-                    <Link to={'/profiles'} className={'btn btn-light'}>
+                    <Link to={'/profiles'} className={'btn btn-primary'}>
                         Back to profiles
                     </Link>
+                    <br />
+                    {profile.user.name}
+                    <br />
                     {auth.isAuthenticated &&
                         auth.loading === false &&
                         auth.user.data._id === profile.user._id && (
@@ -34,8 +35,6 @@ const Profile = ({
                                 Edit Profile
                             </Link>
                         )}
-                    <ProfileTop profile={profile} />
-                    <ProfileAbout profile={profile} />
                 </>
             )}
         </>
