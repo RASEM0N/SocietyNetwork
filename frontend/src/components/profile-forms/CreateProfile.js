@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { createProfile } from '../../actions/profile';
-import { setAlert } from '../../actions/alert';
 
 const initialState = {
     company: '',

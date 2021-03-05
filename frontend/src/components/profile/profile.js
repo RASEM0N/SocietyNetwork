@@ -7,7 +7,7 @@ import { Spinner } from '../common/Spinner';
 const Profiles = ({ profile: { loading, profiles }, getAllProfile }) => {
     useEffect(() => {
         getAllProfile();
-    }, []);
+    }, [getAllProfile]);
 
     return (
         <>

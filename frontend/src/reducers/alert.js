@@ -3,7 +3,7 @@ import { REMOVE_ALERT, SET_ALERT } from '../actions/types';
 const initialState = [];
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default function (state = initialState, action) {
+function alert(state = initialState, action) {
     const { type, payload } = action;
 
     switch (type) {
@@ -18,3 +18,4 @@ export default function (state = initialState, action) {
         }
     }
 }
+export default alert;
