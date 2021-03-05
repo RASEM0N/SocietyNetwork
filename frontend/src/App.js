@@ -16,7 +16,8 @@ import CreateProfile from './components/profile-forms/CreateProfile';
 import EditProfile from './components/profile-forms/EditProfile';
 import AddExperience from './components/profile-forms/AddExperience';
 import AddEducation from './components/profile-forms/AddEducation';
-import Profiles from './components/profile/profile';
+import Profiles from './components/profile/profiles';
+import Profile from './components/profile/profile';
 
 if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -32,13 +33,13 @@ function App() {
             <Fragment>
                 <Navbar />
                 <Route exact path="/" component={Landing} />
-
                 <section className="container">
                     <Alert />
                     <Switch>
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/profiles" component={Profiles} />
+                        <Route exact path="/profile/:id" component={Profile} />
                         <PrivateRoute
                             exact
                             path="/dashboard"

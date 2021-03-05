@@ -68,6 +68,9 @@ export const getAllProfile = () => async (dispatch) => {
 
 // Get profile by ID
 export const getProfileById = (userId) => async (dispatch) => {
+    dispatch({
+        type: LOAD_PROFILE,
+    });
     try {
         const responce = await axios.get(`${URL}/api/profile/user/${userId}`);
 
