@@ -5,6 +5,9 @@ import { getProfileById } from '../../actions/profile';
 import { Spinner } from '../common/Spinner';
 import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
+import ProfileEducation from './ProfileEducation';
+import ProfileExperience from './ProfileExperience';
+import ProfileGithub from './ProfileGitHub';
 
 const Profile = ({
     profile: { profile, loading },
@@ -36,6 +39,41 @@ const Profile = ({
                         )}
                     <ProfileTop profile={profile} />
                     <ProfileAbout profile={profile} />
+                    <div className="profile-exp bg-white p-2">
+                        <h2 className="text-primary">Experience</h2>
+                        {profile.experience.length > 0 ? (
+                            <>
+                                {profile.experience.map((experience) => (
+                                    <ProfileExperience
+                                        key={experience._id}
+                                        experience={experience}
+                                    />
+                                ))}
+                            </>
+                        ) : (
+                            <h4>No experience credentials</h4>
+                        )}
+                    </div>
+
+                    <div className="profile-edu bg-white p-2">
+                        <h2 className="text-primary">Education</h2>
+                        {profile.education.length > 0 ? (
+                            <>
+                                {profile.education.map((education) => (
+                                    <ProfileEducation
+                                        key={education._id}
+                                        education={education}
+                                    />
+                                ))}
+                            </>
+                        ) : (
+                            <h4>No education credentials</h4>
+                        )}
+                    </div>
+
+                    {profile.githubusername && (
+                        <ProfileGithub username={profile.githubusername} />
+                    )}
                 </>
             )}
         </>
