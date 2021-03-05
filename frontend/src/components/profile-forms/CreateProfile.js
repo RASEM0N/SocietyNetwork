@@ -26,8 +26,6 @@ const CreateProfile = ({
 }) => {
     const [formData, setFormData] = useState(initialState);
 
-    console.log(profile);
-
     const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
     if (loading || profile) return <Redirect to={'/dashboard'} />;

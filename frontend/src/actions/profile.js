@@ -8,6 +8,7 @@ import {
     GET_PROFILE,
     GET_PROFILES,
     GET_REPOS,
+    LOAD_PROFILE,
     PROFILE_ERROR,
     UPDATE_PROFILE,
 } from './types';
@@ -15,6 +16,10 @@ import {
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
     try {
+        dispatch({
+            type: LOAD_PROFILE,
+        });
+
         const responce = await axios.get(`${URL}/api/profile/me`);
 
         dispatch({
@@ -37,6 +42,10 @@ export const getCurrentProfile = () => async (dispatch) => {
 export const getAllProfile = () => async (dispatch) => {
     dispatch({
         type: CLEAR_PROFILE,
+    });
+
+    dispatch({
+        type: LOAD_PROFILE,
     });
     try {
         const responce = await axios.get(`${URL}/api/profile`);
