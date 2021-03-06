@@ -7,7 +7,7 @@ export const Spinner = () => {
             <img
                 src={spinner}
                 style={{
-                    width: '200px',
+                    width: '75px',
                     margin: 'auto',
                     display: 'block',
                 }}

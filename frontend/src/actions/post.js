@@ -1,9 +1,13 @@
-import { GET_POSTS, POST_ERROR } from './types';
+import { GET_POSTS, POST_ERROR, POST_LOADING } from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
 import { URL } from '../config/config';
 
 export const getPosts = () => async (dispatch) => {
+    dispatch({
+        type: POST_LOADING,
+    });
+
     try {
         const responce = await axios.get(`${URL}/api/posts`);
 
