@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { getPosts } from '../../actions/post';
 import PostItem from './postItem';
 import { Spinner } from '../common/Spinner';
+import PostForm from './postForm';
 
 const Posts = ({ post: { posts, isLoading }, getPosts, match }) => {
     useEffect(() => {
@@ -17,6 +18,7 @@ const Posts = ({ post: { posts, isLoading }, getPosts, match }) => {
             <p className="lead">
                 <i className="fas fa-user" /> Welcome to the community
             </p>
+            <PostForm />
             {isLoading ? (
                 <Spinner />
             ) : (

@@ -1,4 +1,5 @@
 import {
+    ADD_POST,
     DELETE_POST,
     GET_POSTS,
     POST_ERROR,
@@ -98,6 +99,35 @@ export const deletePost = (postId) => async (dispatch) => {
             payload: postId,
         });
         dispatch(setAlert('Post removed', 'success'));
+    } catch (e) {
+        dispatch({
+            type: POST_ERROR,
+            payload: {
+                msg: e.response.statusText,
+                status: e.response.status,
+            },
+        });
+    }
+};
+
+// Add post
+export const addPost = (formData) => async (dispatch) => {
+    try {
+        const url = `${URL}/api/posts/`;
+        const body = JSON.stringify({
+            text: formData,
+        });
+
+        const responce = await axios.post(url, body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        dispatch({
+            type: ADD_POST,
+            payload: responce.data.data,
+        });
+        dispatch(setAlert('Add post', 'success', 1000));
     } catch (e) {
         dispatch({
             type: POST_ERROR,

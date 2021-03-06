@@ -1,4 +1,5 @@
 import {
+    ADD_POST,
     DELETE_POST,
     GET_POSTS,
     POST_ERROR,
@@ -41,6 +42,13 @@ function Post(state = initialState, action) {
             return {
                 ...state,
                 posts: state.posts.filter((post) => post._id !== payload),
+            };
+        }
+        case ADD_POST: {
+            return {
+                ...state,
+                posts: [...state.posts, payload],
+                isLoading: false,
             };
         }
 
