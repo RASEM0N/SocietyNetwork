@@ -1,4 +1,5 @@
 import {
+    DELETE_POST,
     GET_POSTS,
     POST_ERROR,
     POST_LOADING,
@@ -33,6 +34,13 @@ function Post(state = initialState, action) {
                         ? { ...post, likes: payload.likes }
                         : post
                 ),
+                isLoading: false,
+            };
+        }
+        case DELETE_POST: {
+            return {
+                ...state,
+                posts: state.posts.filter((post) => post._id !== payload),
             };
         }
 

@@ -4,13 +4,14 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
-import { addLike, removeLike } from '../../actions/post';
+import { addLike, deletePost, removeLike } from '../../actions/post';
 
 const PostItem = ({
     auth,
     post: { _id, text, name, avatar, user, likes, comments, date },
     addLike,
     removeLike,
+    deletePost,
 }) => {
     let isLike;
     if (!auth.loading) {
@@ -71,7 +72,11 @@ const PostItem = ({
                             )}
                         </Link>
                         {!auth.loading && user === auth.user.data._id && (
-                            <button type="button" className="btn btn-danger">
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={() => deletePost(_id)}
+                            >
                                 <i className="fas fa-times" />
                             </button>
                         )}
@@ -95,5 +100,6 @@ export default compose(
     connect(mapStateToProps, {
         addLike,
         removeLike,
+        deletePost,
     })
 )(PostItem);
