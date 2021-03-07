@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import { getPost } from '../../actions/post';
 import { Spinner } from '../common/Spinner';
 import PostItem from '../posts/postItem';
+import CommentForm from './commentForm';
 
 const Post = ({ getPost, post: { post, isLoading }, match }) => {
     useEffect(() => {
-        console.log(match.params.id);
         getPost(match.params.id);
     }, [getPost]);
 
@@ -21,6 +21,7 @@ const Post = ({ getPost, post: { post, isLoading }, match }) => {
                 Back To Posts
             </Link>
             <PostItem post={post} showActions={false} />
+            <CommentForm post={post} />
         </>
     );
 };
