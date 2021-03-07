@@ -12,6 +12,7 @@ const PostItem = ({
     addLike,
     removeLike,
     deletePost,
+    showActions,
 }) => {
     let isLike;
     if (!auth.loading) {
@@ -42,43 +43,51 @@ const PostItem = ({
                             Posted on{' '}
                             <Moment format={'DD/MM/YYYY'}>{date}</Moment>
                         </p>
-                        <button
-                            type="button"
-                            className="btn btn-light"
-                            onClick={() => addLike(_id)}
-                            disabled={isLike.length === 1}
-                        >
-                            <i className="fas fa-thumbs-up"></i>
-                            <span>
-                                {likes.length > 0 && (
-                                    <span> {likes.length}</span>
+
+                        {showActions && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="btn btn-light"
+                                    onClick={() => addLike(_id)}
+                                    disabled={isLike.length === 1}
+                                >
+                                    <i className="fas fa-thumbs-up"></i>
+                                    <span>
+                                        {likes.length > 0 && (
+                                            <span> {likes.length}</span>
+                                        )}
+                                    </span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-light"
+                                    onClick={() => removeLike(_id)}
+                                    disabled={isLike.length !== 1}
+                                >
+                                    <i className="fas fa-thumbs-down"></i>
+                                </button>
+                                <Link
+                                    to={`/posts/${_id}`}
+                                    className="btn btn-primary"
+                                >
+                                    Discussion{' '}
+                                    {comments.length > 0 && (
+                                        <span className="comment-count">
+                                            {comments.length}
+                                        </span>
+                                    )}
+                                </Link>
+                                {!auth.loading && user === auth.user.data._id && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={() => deletePost(_id)}
+                                    >
+                                        <i className="fas fa-times" />
+                                    </button>
                                 )}
-                            </span>
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-light"
-                            onClick={() => removeLike(_id)}
-                            disabled={isLike.length !== 1}
-                        >
-                            <i className="fas fa-thumbs-down"></i>
-                        </button>
-                        <Link to={`/post/${_id}`} className="btn btn-primary">
-                            Discussion{' '}
-                            {comments.length > 0 && (
-                                <span className="comment-count">
-                                    {comments.length}
-                                </span>
-                            )}
-                        </Link>
-                        {!auth.loading && user === auth.user.data._id && (
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() => deletePost(_id)}
-                            >
-                                <i className="fas fa-times" />
-                            </button>
+                            </>
                         )}
                     </div>
                 </div>
@@ -94,6 +103,10 @@ const mapStateToProps = (state) => ({
 PostItem.propTypes = {
     auth: PropTypes.object.isRequired,
     post: PropTypes.object.isRequired,
+};
+
+PostItem.defaultProps = {
+    showActions: true,
 };
 
 export default compose(

@@ -1,6 +1,7 @@
 import {
     ADD_POST,
     DELETE_POST,
+    GET_POST,
     GET_POSTS,
     POST_ERROR,
     POST_LOADING,
@@ -129,6 +130,39 @@ export const addPost = (formData) => async (dispatch) => {
         });
         dispatch(setAlert('Add post', 'success', 1000));
     } catch (e) {
+        dispatch({
+            type: POST_ERROR,
+            payload: {
+                msg: e.response.statusText,
+                status: e.response.status,
+            },
+        });
+    }
+};
+
+export const getPost = (postId) => async (dispatch) => {
+    dispatch({
+        type: POST_LOADING,
+    });
+
+    try {
+        console.log('fdsfds');
+
+        const responce = await axios.get(`${URL}/api/posts/${postId}`);
+
+        dispatch({
+            type: GET_POST,
+            payload: responce.data.data,
+        });
+    } catch (e) {
+        console.log(e.message);
+        const errors = e.response.data.errors;
+        if (errors !== undefined) {
+            console.log(errors);
+            errors.forEach((error) => {
+                dispatch(setAlert(error.msg));
+            });
+        }
         dispatch({
             type: POST_ERROR,
             payload: {
