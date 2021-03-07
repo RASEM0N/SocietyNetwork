@@ -209,6 +209,8 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
     try {
         const url = `${URL}/api/posts/comment/${postId}/${commentId}`;
 
+        console.log(postId, commentId);
+
         const responce = await axios.delete(url);
         dispatch({
             type: REMOVE_COMMENT,
